@@ -1,1 +1,68 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sehnsucht</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 640px; margin: 40px auto; padding: 0 16px; background: #0f0f12; color: #eee; }
+  h1 { font-weight: 600; }
+  textarea { width: 100%; box-sizing: border-box; padding: 10px; font-size: 15px; border-radius: 8px; border: 1px solid #333; background: #1a1a1f; color: #eee; resize: vertical; }
+  button { margin-top: 10px; padding: 10px 20px; font-size: 15px; border-radius: 8px; border: none; background: #6c63ff; color: white; cursor: pointer; }
+  button:disabled { opacity: 0.5; cursor: default; }
+  #output { white-space: pre-wrap; margin-top: 20px; padding: 14px; border-radius: 8px; background: #1a1a1f; min-height: 60px; line-height: 1.5; }
+  .row { display: flex; gap: 12px; margin-top: 10px; }
+  label { font-size: 13px; color: #999; }
+</style>
+</head>
+<body>
+  <h1>Sehnsucht</h1>
+  <p style="color:#999;">A from-scratch tiny transformer that writes short stories.</p>
+
+  <textarea id="prompt" rows="3" placeholder="Once upon a time..."></textarea>
+
+  <div class="row">
+    <div>
+      <label>Max new tokens</label><br>
+      <input id="maxTokens" type="number" value="200" min="20" max="400">
+    </div>
+    <div>
+      <label>Temperature</label><br>
+      <input id="temperature" type="number" value="0.7" min="0.1" max="1.5" step="0.1">
+    </div>
+  </div>
+
+  <button id="go">Generate</button>
+
+  <div id="output"></div>
+
+<script>
+const btn = document.getElementById('go');
+const output = document.getElementById('output');
+
+btn.addEventListener('click', async () => {
+  const prompt = document.getElementById('prompt').value;
+  const max_new_tokens = parseInt(document.getElementById('maxTokens').value, 10);
+  const temperature = parseFloat(document.getElementById('temperature').value);
+
+  btn.disabled = true;
+  output.textContent = 'Generating... (first request after idle can take 30-60s to wake the server)';
+
+  try {
+    const res = await fetch('/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt, max_new_tokens, temperature })
+    });
+    const data = await res.json();
+    output.textContent = data.response;
+  } catch (err) {
+    output.textContent = 'Error: ' + err.message;
+  } finally {
+    btn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
