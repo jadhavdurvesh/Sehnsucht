@@ -20,8 +20,20 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
-MODEL_PATH = "model.pth"
-TOKENIZER_PATH = "tokenizer.model"
+from huggingface_hub import hf_hub_download
+
+HF_REPO_ID = "Durveshjadhav/sehnsucht-model_v1"
+
+MODEL_PATH = hf_hub_download(
+    repo_id=HF_REPO_ID,
+    filename="model.pth"
+)
+
+TOKENIZER_PATH = hf_hub_download(
+    repo_id=HF_REPO_ID,
+    filename="tokenizer.model"
+)
+
 DEVICE = "cpu"
 
 sp = spm.SentencePieceProcessor()
