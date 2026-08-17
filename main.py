@@ -19,21 +19,15 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
-
 from huggingface_hub import hf_hub_download
 
+# Weights live on Hugging Face Hub (plain Model repo — free, no size limit
+# problem like GitHub, and unrelated to the Spaces hardware paywall).
+# Replace with your actual repo id after uploading the two files there.
 HF_REPO_ID = "Durveshjadhav/sehnsucht-model_v1"
 
-MODEL_PATH = hf_hub_download(
-    repo_id=HF_REPO_ID,
-    filename="model.pth"
-)
-
-TOKENIZER_PATH = hf_hub_download(
-    repo_id=HF_REPO_ID,
-    filename="tokenizer.model"
-)
-
+MODEL_PATH = hf_hub_download(repo_id=HF_REPO_ID, filename="model.pth")
+TOKENIZER_PATH = hf_hub_download(repo_id=HF_REPO_ID, filename="tokenizer.model")
 DEVICE = "cpu"
 
 sp = spm.SentencePieceProcessor()
