@@ -4,3 +4,4 @@ uvicorn[standard]
 torch
 sentencepiece
 pydantic
+huggingface_hub
